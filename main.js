@@ -22,9 +22,9 @@ class Hamburger{
             if (stuffing !== Hamburger.STUFFING_CHEESE && stuffing !== Hamburger.STUFFING_SALAD && stuffing !== Hamburger.STUFFING_POTATO) {
                 throw new HamburgerException("Please enter correct stuffing:CHEESE, SALAD,or  POTATO");
             }
-            this.size = size;
-            this.stuffing = stuffing;
-            this.topping = [];
+            this._size = size;
+            this._stuffing = stuffing;
+            this._topping = [];
         } catch (e) {
             console.log(e.message);
         }
@@ -37,11 +37,11 @@ class Hamburger{
                 throw new HamburgerException('Sorry there is no such topping');
             }
 
-            if(this.topping.includes(topping)){
+            if(this._topping.includes(topping)){
                 throw new HamburgerException('Sorry your hamburger already includes this topping, you can add another');
             }
             else{
-                this.topping.push(topping)
+                this._topping.push(topping)
             }
 
         }catch(e){
@@ -57,26 +57,26 @@ class Hamburger{
                 throw new HamburgerException('Sorry there is no such topping');
             }
 
-            if(this.topping.includes(topping)){
-                this.topping.splice(this.topping.indexOf(topping,1))
+            if(this._topping.includes(topping)){
+                this._topping.splice(this._topping.indexOf(topping,1))
             }
         }catch(e){
             console.log(e.message);
         }
     };
-    getToppings (){
+    get toppings (){
         let arr=[];
-        for(let topping of this.topping){
+        for(let topping of this._topping){
             arr.push(topping.calories);
         }
         return arr
     };
 
-    getSize(){
-        return this.size.size
+    get size(){
+        return this._size.size
     };
-    getStuffing(){
-        return this.stuffing.stuffing
+    get stuffing(){
+        return this._stuffing._stuffing
     };
 
     calculatePrice(){
@@ -86,7 +86,7 @@ class Hamburger{
                 priceCount+=this[key].price
             }
         }
-        for(let topping of this.topping){
+        for(let topping of this._topping){
             priceCount+=topping.price;
         }
         return priceCount;
@@ -99,7 +99,7 @@ class Hamburger{
                 caloriesCount+=this[key].calories
             }
         }
-        for(let topping of this.topping){
+        for(let topping of this._topping){
             caloriesCount+=topping.calories;
         }
         return  caloriesCount;
@@ -118,9 +118,13 @@ Hamburger.TOPPING_MAYO ={price:20, calories:5, topping:'mayo'};
 Hamburger.TOPPING_SPICE ={price:15, calories:0, topping:'spice'};
 
 
-function HamburgerException (message) {
-    this.message=message;
-    this.name='HamburgerException';
+class HamburgerException extends Error{
+    constructor(message){
+        super(message)
+        this.message=message;
+        this.name='HamburgerException';
+    }
+
 }
 
 
@@ -138,8 +142,8 @@ hamburger.addTopping(Hamburger.TOPPING_SPICE);
 // // А сколько теперь стоит?
 console.log("Price with sauce: %f", hamburger.calculatePrice());
 // // Проверить, большой ли гамбургер?
-console.log("Is hamburger large: %s", hamburger.getSize() === Hamburger.SIZE_LARGE); // -> false
+console.log("Is hamburger large: %s", hamburger.size === Hamburger.SIZE_LARGE); // -> false
 // // Убрать добавку
 hamburger.removeTopping(Hamburger.TOPPING_SPICE);
-console.log("Have %d toppings", hamburger.getToppings().length); // 1
+console.log("Have %d toppings", hamburger.toppings.length); // 1
 console.log(hamburger);
